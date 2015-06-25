@@ -1,55 +1,95 @@
 let Fabricate = require("fabricant");
 let THREE = require("three");
 
-class DaveComponent {
+class Mesh {
 	constructor() {
-		console.log("Creating DaveComponent");
+    	this.geometry = new THREE.BoxGeometry( 200, 200, 200 );
+    	this.material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+
+    	this.mesh = new THREE.Mesh( geometry, material );
+
+    	this.sceneNode = this.mesh;
+	}
+
+	updateRotation(x, y) {
+		this.mesh.rotation.x += x;
+		this.mesh.rotation.y += y;
 	}
 }
 
-const prefab = {
-	name: "Dave",
-	components: [DaveComponent]
+class Mover {
+	update(dt) {
+    	this.host.components.get(Mesh).updateRotation(0.01, 0.02);
+	}
+}
+
+const Cube = {
+	name: "Cube",
+	components: [Mesh, Mover]
 };
 
+class Scene {
+	constructor() {
+		this.scene = new THREE.Scene();
 
-let newDave = Fabricate(prefab);
-console.log(newDave);
+    	this.renderer = new THREE.WebGLRenderer();
+    	this.renderer.setSize( window.innerWidth, window.innerHeight );
 
-var camera, scene, renderer;
+	    document.body.appendChild( this.renderer.domElement );
+	}
+
+	add(host) {
+		// to be added to the scene the host object must have one and only one Object3D
+		host.components.forEach((component) => {
+			if(component.sceneNode) {
+				this.scene.add(component.sceneNode);
+			}
+		});
+	}
+
+	render(camera) {
+    	this.renderer.render(this.scene, camera);
+	}
+}
+
+var camera;
 var geometry, material, mesh;
+console.info(window.innerWidth,window.innerHeight);
+camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+camera.position.z = 1000;
+
+const scene = new Scene();
+const cube1 = Fabricate(Cube);
 
 init();
 animate();
 
 function init() {
 
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-    camera.position.z = 1000;
 
-    scene = new THREE.Scene();
+    //scene = new THREE.Scene();
 
-    geometry = new THREE.BoxGeometry( 200, 200, 200 );
-    material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
+    scene.add(cube1);
 
-    mesh = new THREE.Mesh( geometry, material );
-    scene.add( mesh );
+    // geometry = new THREE.BoxGeometry( 200, 200, 200 );
+    // material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    // mesh = new THREE.Mesh( geometry, material );
 
-    document.body.appendChild( renderer.domElement );
+    // scene.add( mesh );
 
+    // renderer = new THREE.WebGLRenderer();
+    // renderer.setSize( window.innerWidth, window.innerHeight );
+
+    // document.body.appendChild( renderer.domElement );
 }
 
 function animate() {
+    requestAnimationFrame(animate);
 
-    // note: three.js includes requestAnimationFrame shim 
-    requestAnimationFrame( animate );
-
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.02;
-
-    renderer.render( scene, camera );
-
+    // cube1.components.get(Mover).update(0.1);
+    // mesh.rotation.x += 0.01;
+    // mesh.rotation.y += 0.02;
+    scene.render(camera);
+//    renderer.render( scene, camera );
 }
