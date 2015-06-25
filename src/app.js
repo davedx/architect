@@ -5,9 +5,7 @@ class Mesh {
 	constructor() {
     	this.geometry = new THREE.BoxGeometry( 200, 200, 200 );
     	this.material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-
-    	this.mesh = new THREE.Mesh( geometry, material );
-
+    	this.mesh = new THREE.Mesh(this.geometry, this.material);
     	this.sceneNode = this.mesh;
 	}
 
@@ -33,8 +31,7 @@ class Scene {
 		this.scene = new THREE.Scene();
 
     	this.renderer = new THREE.WebGLRenderer();
-    	this.renderer.setSize( window.innerWidth, window.innerHeight );
-
+    	this.renderer.setSize(window.innerWidth, window.innerHeight);
 	    document.body.appendChild( this.renderer.domElement );
 	}
 
@@ -52,44 +49,17 @@ class Scene {
 	}
 }
 
-var camera;
-var geometry, material, mesh;
-console.info(window.innerWidth,window.innerHeight);
-camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-camera.position.z = 1000;
-
-const scene = new Scene();
 const cube1 = Fabricate(Cube);
+const scene = new Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+camera.position.z = 1000;
+scene.add(cube1);
 
-init();
 animate();
 
-function init() {
-
-
-    //scene = new THREE.Scene();
-
-    scene.add(cube1);
-
-    // geometry = new THREE.BoxGeometry( 200, 200, 200 );
-    // material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-
-    // mesh = new THREE.Mesh( geometry, material );
-
-    // scene.add( mesh );
-
-    // renderer = new THREE.WebGLRenderer();
-    // renderer.setSize( window.innerWidth, window.innerHeight );
-
-    // document.body.appendChild( renderer.domElement );
-}
 
 function animate() {
     requestAnimationFrame(animate);
-
-    // cube1.components.get(Mover).update(0.1);
-    // mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.02;
+    cube1.components.get(Mover).update(0.1);
     scene.render(camera);
-//    renderer.render( scene, camera );
 }
