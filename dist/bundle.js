@@ -184,7 +184,7 @@
 	})();
 
 	var cube1 = Fabricate(Cube);
-	cube1.components.get(Mesh).position.x = -200;
+	cube1.components.get(SceneNode).position.x = -400;
 
 	//TODO: get scene graph working - we should be able to add Cube2 to Cube1, and
 	//have its position be relative to its parent.
