@@ -1,6 +1,6 @@
 {
-  "name": "test2",
-  "version": "0.0.0",
+  "name": "architect",
+  "version": "0.0.1",
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
@@ -18,8 +18,9 @@
     "webpack": "^1.9.11"
   },
   "scripts": {
-    "build": "webpack --progress --colors"
+    "build": "webpack --progress --colors",
+    "watch": "webpack --progress --colors --watch"
   },
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }

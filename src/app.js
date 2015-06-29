@@ -26,6 +26,11 @@ const Cube = {
 	components: [Mesh, Mover]
 };
 
+const SmallCube = {
+	name: "Small Cube",
+	components: [Mesh]
+};
+
 class Scene {
 	constructor() {
 		this.scene = new THREE.Scene();
@@ -50,10 +55,17 @@ class Scene {
 }
 
 const cube1 = Fabricate(Cube);
+cube1.components.get(Mesh).mesh.position.x = -200;
+//TODO: get scene graph working - we should be able to add Cube2 to Cube1, and
+//have its position be relative to its parent.
+const cube2 = Fabricate(SmallCube);
+cube2.components.get(Mesh).mesh.position.x = 200;
+
 const scene = new Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
 camera.position.z = 1000;
 scene.add(cube1);
+scene.add(cube2);
 
 animate();
 
